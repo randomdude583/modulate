@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:test/test.dart';
 
 import 'package:modulate/modulate.dart';
@@ -16,8 +18,7 @@ void main() {
   String B10 = "2160529556";
 
 
-  group('modulate_StringInOut', ()
-  {
+  group('modulate_StringInOut', () {
     test('modulate_Base3_StringInOut', () {
       expect(modulate(input: B2, base: 3, width: 6), B3);
     });
@@ -45,8 +46,7 @@ void main() {
   });
 
 
-  group('modulate_StringInOut_reverse', ()
-  {
+  group('modulate_StringInOut_reverse', () {
     test('modulate_Base3_StringInOut', () {
       expect(modulate(input: B3, base: 3, width: 6, reverse: true), B2);
     });
@@ -70,6 +70,15 @@ void main() {
     });
     test('modulate_Base10_StringInOut', () {
       expect(modulate(input: B10, base: 10, width: 5, reverse: true), B2);
+    });
+  });
+
+  group('modulate_FileIn', () {
+    test('modulate_FileIn_exists', (){
+      expect(modulate(input: File("assets/testIn.txt"), base: 4, width: 4), B4);
+    });
+    test('modulate_FileIn_doesNotExist', (){
+      expect(() => modulate(input: File("doesNotExist.txt"), base: 4, width: 4), throwsException);
     });
   });
 
