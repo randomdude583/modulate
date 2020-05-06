@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:test/test.dart';
 
@@ -16,70 +18,93 @@ void main() {
   String B8 = "2506256300000164";
   String B9 = "1136008000000138";
   String B10 = "2160529556";
+  
 
 
-  group('modulate_StringInOut', () {
-    test('modulate_Base3_StringInOut', () {
-      expect(modulate(input: B2, base: 3, width: 6), B3);
+  group('modulatePSK', () {
+    test('modulatePSK_Base3', () {
+      expect(modulatePSK(input: B2, outBase: 3, outWidth: 6), B3);
     });
-    test('modulate_Base4_StringInOut', () {
-      expect(modulate(input: B2, base: 4, width: 4), B4);
+    test('modulatePSK_Base4', () {
+      expect(modulatePSK(input: B2, outBase: 4, outWidth: 4), B4);
     });
-    test('modulate_Base5_StringInOut', () {
-      expect(modulate(input: B2, base: 5, width: 7), B5);
+    test('modulatePSK_Base5', () {
+      expect(modulatePSK(input: B2, outBase: 5, outWidth: 7), B5);
     });
-    test('modulate_Base6_StringInOut', () {
-      expect(modulate(input: B2, base: 6, width: 10), B6);
+    test('modulatePSK_Base6', () {
+      expect(modulatePSK(input: B2, outBase: 6, outWidth: 10), B6);
     });
-    test('modulate_Base7_StringInOut', () {
-      expect(modulate(input: B2, base: 7, width: 3), B7);
+    test('modulatePSK_Base7', () {
+      expect(modulatePSK(input: B2, outBase: 7, outWidth: 3), B7);
     });
-    test('modulate_Base8_StringInOut', () {
-      expect(modulate(input: B2, base: 8, width: 8), B8);
+    test('modulatePSK_Base8', () {
+      expect(modulatePSK(input: B2, outBase: 8, outWidth: 8), B8);
     });
-    test('modulate_Base9_StringInOut', () {
-      expect(modulate(input: B2, base: 9, width: 8), B9);
+    test('modulatePSK_Base9', () {
+      expect(modulatePSK(input: B2, outBase: 9, outWidth: 8), B9);
     });
-    test('modulate_Base10_StringInOut', () {
-      expect(modulate(input: B2, base: 10, width: 5), B10);
+    test('modulatePSK_Base10', () {
+      expect(modulatePSK(input: B2, outBase: 10, outWidth: 5), B10);
     });
   });
 
 
-  group('modulate_StringInOut_reverse', () {
-    test('modulate_Base3_StringInOut', () {
-      expect(modulate(input: B3, base: 3, width: 6, reverse: true), B2);
+
+
+  group('demodulatePSK', () {
+    test('demodulatePSK_Base3', () {
+      expect(demodulatePSK(input: B3, inBase: 3, inWidth: 6), B2);
     });
-    test('modulate_Base4_StringInOut', () {
-      expect(modulate(input: B4, base: 4, width: 4, reverse: true), B2);
+    test('demodulatePSK_Base4', () {
+      expect(demodulatePSK(input: B4, inBase: 4, inWidth: 4), B2);
     });
-    test('modulate_Base5_StringInOut', () {
-      expect(modulate(input: B5, base: 5, width: 7, reverse: true), B2);
+    test('demodulatePSK_Base5', () {
+      expect(demodulatePSK(input: B5, inBase: 5, inWidth: 7), B2);
     });
-    test('modulate_Base6_StringInOut', () {
-      expect(modulate(input: B6, base: 6, width: 10, reverse: true), B2);
+    test('demodulatePSK_Base6', () {
+      expect(demodulatePSK(input: B6, inBase: 6, inWidth: 10), B2);
     });
-    test('modulate_Base7_StringInOut', () {
-      expect(modulate(input: B7, base: 7, width: 3, reverse: true), B2);
+    test('demodulatePSK_Base7', () {
+      expect(demodulatePSK(input: B7, inBase: 7, inWidth: 3), B2);
     });
-    test('modulate_Base8_StringInOut', () {
-      expect(modulate(input: B8, base: 8, width: 8, reverse: true), B2);
+    test('demodulatePSK_Base8', () {
+      expect(demodulatePSK(input: B8, inBase: 8, inWidth: 8), B2);
     });
-    test('modulate_Base9_StringInOut', () {
-      expect(modulate(input: B9, base: 9, width: 8, reverse: true), B2);
+    test('demodulatePSK_Base9', () {
+      expect(demodulatePSK(input: B9, inBase: 9, inWidth: 8), B2);
     });
-    test('modulate_Base10_StringInOut', () {
-      expect(modulate(input: B10, base: 10, width: 5, reverse: true), B2);
+    test('demodulatePSK_Base10', () {
+      expect(demodulatePSK(input: B10, inBase: 10, inWidth: 5), B2);
     });
   });
 
-  group('modulate_FileIn', () {
-    test('modulate_FileIn_exists', (){
-      expect(modulate(input: File("assets/testIn.txt"), base: 4, width: 4), B4);
+
+
+
+
+
+
+
+  group('modulatePSKFile', () {
+    test('modulatePSKFile_', (){
+      File file = new File("assets/testIn.txt");
+      modulateFilePSK(file: file, base: 4, width: 4);
     });
-    test('modulate_FileIn_doesNotExist', (){
-      expect(() => modulate(input: File("doesNotExist.txt"), base: 4, width: 4), throwsException);
-    });
+  });
+
+
+
+  String getStringFromBytes(ByteData data) {
+    final buffer = data.buffer;
+    var list = buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    return utf8.decode(list);
+  }
+  
+  test('demoBytes', (){
+    File file = new File("assets/testIn.txt");
+    Uint8List bytes = file.readAsBytesSync();
+    print(bytes);
+
   });
 
 
